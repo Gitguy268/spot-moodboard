@@ -1,0 +1,17 @@
+{
+  "name": "spot-moodboard",
+  "private": true,
+  "version": "1.0.0",
+  "description": "An interactive moodboard for Spot, a black lab with a red collar: a cork pinboard, a clean gallery and a cozy Christmas wall.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "smoke": "node tests/smoke.mjs",
+    "test": "node tests/smoke.mjs",
+    "capture": "node scripts/capture.mjs",
+    "images": "node scripts/prepare-images.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.65.0"
+  }
+}

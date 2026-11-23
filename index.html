@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spot moodboard</title>
+<meta name="description" content="An interactive moodboard for Spot, a two-year-old black labrador with a red collar. Pin, shuffle and browse his portraits as a cork pinboard, a clean gallery or a cozy Christmas wall.">
+<meta name="theme-color" content="#c8202f">
+<meta property="og:title" content="Spot moodboard">
+<meta property="og:description" content="Pin, shuffle and browse portraits of Spot, a black lab with a red collar.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://gitguy268.github.io/spot-moodboard/">
+<meta property="og:image" content="https://gitguy268.github.io/spot-moodboard/docs/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://gitguy268.github.io/spot-moodboard/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root {
+  --coat: #141414;
+  --collar: #c8202f;
+  --amber: #8a5527;
+  --snow: #f4f1ea;
+  --tartan: #2f5a43;
+  --gold: #c9a45c;
+
+  --bg: #f6f3ee;
+  --ink: #1b1a19;
+  --muted: #6b6661;
+  --line: #e2ddd5;
+  --card: #ffffff;
+  --chip: #ffffff;
+  --chip-on: #1b1a19;
+  --chip-on-ink: #ffffff;
+  --shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.08);
+  --head-font: "Fraunces", Georgia, "Times New Roman", serif;
+  --body-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --hand-font: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121212; --ink: #f1eee9; --muted: #a39d96; --line: #2a2826;
+    --card: #1c1b1a; --chip: #1c1b1a; --chip-on: #f1eee9; --chip-on-ink: #121212;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121212; --ink: #f1eee9; --muted: #a39d96; --line: #2a2826;
+  --card: #1c1b1a; --chip: #1c1b1a; --chip-on: #f1eee9; --chip-on-ink: #121212;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+
+/* The pinboard and cozy looks set their own palette whatever the system theme. */
+body.look-board {
+  --bg: #a97c4f; --ink: #2a1d12; --muted: #5a4330; --line: rgba(42,29,18,.18);
+  --card: #fffdf8; --chip: #fff8ec; --chip-on: #2a1d12; --chip-on-ink: #fff8ec;
+  --shadow: 0 2px 3px rgba(40,22,8,.25), 0 14px 28px rgba(40,22,8,.28);
+  color-scheme: light;
+}
+body.look-cozy {
+  --bg: #170d08; --ink: #f6e7cf; --muted: #c9ad88; --line: rgba(201,164,92,.25);
+  --card: #24150d; --chip: #24150d; --chip-on: #c9a45c; --chip-on-ink: #170d08;
+  --shadow: 0 10px 30px rgba(0,0,0,.55);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+  font: 15px/1.5 var(--body-font); overflow-x: hidden;
+  transition: background-color .4s ease, color .4s ease;
+}
+button, input { font: inherit; color: inherit; }
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--collar); outline-offset: 3px; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Backdrops */
+.backdrop { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0; transition: opacity .5s ease; }
+.look-board .cork { opacity: 1; }
+.look-cozy .hearth, .look-cozy #snow { opacity: 1; }
+.cork {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,230,190,.10) 0 1px, transparent 2px) 0 0/7px 7px,
+    radial-gradient(circle at 70% 60%, rgba(60,30,10,.22) 0 1px, transparent 2px) 0 0/9px 9px,
+    radial-gradient(circle at 40% 80%, rgba(40,20,5,.16) 0 1.5px, transparent 2.5px) 0 0/13px 13px,
+    radial-gradient(circle at 60% 20%, rgba(255,220,170,.12) 0 2px, transparent 3px) 0 0/17px 17px,
+    radial-gradient(ellipse at 50% 0%, #c19163 0%, #a97c4f 55%, #8c633b 100%);
+}
+.hearth {
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 105%, rgba(255,140,40,.38), rgba(200,60,20,.12) 50%, transparent 75%),
+    radial-gradient(ellipse 120% 80% at 50% 0%, #2a160c 0%, #170d08 60%, #0d0705 100%);
+  animation: flicker 4s ease-in-out infinite;
+}
+@keyframes flicker { 0%,100% { filter: brightness(1); } 30% { filter: brightness(1.08); } 55% { filter: brightness(.94); } 75% { filter: brightness(1.05); } }
+#snow { width: 100%; height: 100%; }
+
+/* Header */
+header.top { position: relative; z-index: 2; padding: 28px 16px 8px; max-width: 1280px; margin: 0 auto; }
+.title-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 20px; justify-content: space-between; }
+h1 { margin: 0; font: 700 clamp(44px, 9vw, 84px)/0.95 var(--head-font); letter-spacing: -0.02em; }
+h1 .dot { color: var(--collar); }
+.look-board h1 { font-family: var(--hand-font); font-weight: 700; letter-spacing: 0; transform: rotate(-2deg); text-shadow: 0 1px 0 rgba(255,240,220,.35); }
+.look-cozy h1 { font-style: italic; font-weight: 400; color: #f6e7cf; text-shadow: 0 0 30px rgba(255,150,60,.35); }
+.tagline { margin: 10px 0 0; color: var(--muted); max-width: 46ch; }
+.look-board .tagline { color: #3d2a1a; }
+
+.picker { display: inline-flex; padding: 4px; gap: 2px; border-radius: 999px; background: var(--chip); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.picker button { border: 0; background: transparent; padding: 8px 14px; border-radius: 999px; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.picker button[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-ink); }
+.picker svg { width: 16px; height: 16px; flex: none; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; margin-top: 22px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: var(--chip); padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 14px; }
+.chip[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-ink); border-color: transparent; }
+.chip .n { opacity: .6; margin-left: 4px; font-variant-numeric: tabular-nums; }
+.actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn { border: 1px solid var(--line); background: var(--chip); padding: 6px 12px; border-radius: 10px; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+.btn:hover, .chip:hover { border-color: var(--muted); }
+.btn svg { width: 16px; height: 16px; }
+.board-only { display: none !important; }
+.look-board .board-only { display: inline-flex !important; }
+
+.swatches { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 18px; font-size: 13px; color: var(--muted); }
+.swatches .label { font-weight: 600; letter-spacing: .04em; text-transform: uppercase; font-size: 11px; }
+.sw { display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; padding: 2px; cursor: pointer; color: inherit; font-size: 13px; }
+.sw i { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(127,127,127,.35); display: inline-block; }
+.look-board .swatches { color: #3d2a1a; }
+
+main { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 18px 16px 40px; }
+
+/* Card base */
+.card { position: relative; margin: 0; cursor: pointer; background: var(--card); }
+.card img { width: 100%; height: auto; user-select: none; -webkit-user-drag: none; }
+.card figcaption { font-size: 13px; }
+.card.cutout img { background: transparent; }
+
+/* Gallery + cozy: masonry columns */
+.grid { columns: 260px; column-gap: 16px; }
+.grid .card { break-inside: avoid; margin: 0 0 16px; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform .25s ease, box-shadow .25s ease; display: block; }
+.grid .card:hover { transform: translateY(-3px); }
+.grid .card.cutout { background: linear-gradient(180deg, color-mix(in srgb, var(--card) 70%, #c9c2b8), var(--card)); }
+.look-gallery .card figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 28px 12px 10px; color: #fff;
+  background: linear-gradient(transparent, rgba(0,0,0,.62)); opacity: 0; transform: translateY(6px); transition: .25s ease;
+}
+.look-gallery .card:hover figcaption, .look-gallery .card:focus-visible figcaption { opacity: 1; transform: none; }
+@media (hover: none) { .look-gallery .card figcaption { opacity: 1; transform: none; } }
+
+.look-cozy .grid .card { border-radius: 4px; padding: 10px; background: linear-gradient(145deg, #3b2412, #1e110a); box-shadow: 0 0 0 1px var(--gold), 0 0 0 5px #2a180c, 0 0 0 6px rgba(201,164,92,.6), var(--shadow); margin-bottom: 26px; overflow: visible; }
+.look-cozy .grid .card img { border-radius: 2px; }
+.look-cozy .grid .card.cutout img { background: radial-gradient(ellipse at 50% 80%, #6b3a1c, #2a170c 70%); }
+.look-cozy .card figcaption { font: italic 15px/1.35 var(--head-font); color: var(--muted); padding: 10px 4px 2px; text-align: center; }
+.look-cozy .grid .card:hover { transform: translateY(-3px) rotate(-.4deg); box-shadow: 0 0 0 1px var(--gold), 0 0 0 5px #2a180c, 0 0 0 6px rgba(201,164,92,.9), 0 0 40px rgba(255,150,60,.25), var(--shadow); }
+
+/* Pinboard */
+.board-wrap { position: relative; }
+.board { position: relative; transform-origin: 0 0; }
+.board .card {
+  position: absolute; top: 0; left: 0; padding: 10px 10px 0; border-radius: 2px;
+  box-shadow: var(--shadow); touch-action: pan-y; will-change: transform;
+  transition: box-shadow .2s ease;
+}
+.board .card figcaption { font: 600 21px/1.1 var(--hand-font); color: #3b3631; padding: 8px 2px 12px; text-align: center; min-height: 40px; }
+.board .card.cutout { background: #fffdf8; }
+.board .card::before { /* push pin in Spot's collar red */
+  content: ""; position: absolute; top: -7px; left: 50%; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; z-index: 2;
+  background: radial-gradient(circle at 35% 30%, #ff8b8b 0 2px, #e0303f 4px, #a3121f 9px);
+  box-shadow: 1px 3px 3px rgba(0,0,0,.35);
+}
+.board .card:nth-child(3n+1)::before { background: transparent; box-shadow: none; }
+.board .card:nth-child(3n+1)::after { /* tape instead of a pin on every third card */
+  content: ""; position: absolute; top: -12px; left: 50%; width: 92px; height: 26px; margin-left: -46px; transform: rotate(-3deg);
+  background: rgba(240,228,196,.72); box-shadow: 0 1px 2px rgba(0,0,0,.12);
+  clip-path: polygon(3% 0, 97% 4%, 100% 50%, 97% 100%, 2% 96%, 0 50%);
+}
+.board .card.dragging { box-shadow: 0 4px 6px rgba(40,22,8,.25), 0 30px 50px rgba(40,22,8,.35); cursor: grabbing; }
+.board .card.hidden, .grid .card.hidden { display: none; }
+@media (hover: hover) { .board .card { cursor: grab; } }
+.board-hint { margin: 0 0 10px; font: 600 20px var(--hand-font); color: #3d2a1a; }
+
+.empty { text-align: center; color: var(--muted); padding: 60px 0; }
+
+/* Lightbox */
+dialog.lightbox { border: 0; padding: 0; background: transparent; max-width: none; max-height: none; width: 100vw; height: 100vh; height: 100dvh; margin: 0; color: #f4f1ea; }
+dialog.lightbox::backdrop { background: rgba(10,8,6,.95); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.lb { display: grid; grid-template-rows: 1fr auto; height: 100%; padding: 16px; gap: 12px; }
+.lb-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; }
+.lb-stage img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+.lb-stage img.cutout { background: radial-gradient(ellipse at 50% 70%, #4a4540, #1d1b19 75%); }
+.lb-info { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; max-width: 1100px; width: 100%; margin: 0 auto; }
+.lb-info p { margin: 0; max-width: 60ch; }
+.lb-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.lb-tags span { font-size: 12px; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 1px 8px; color: #d8d2c8; }
+.lb-pal { display: flex; gap: 6px; align-items: center; }
+.lb-pal button { width: 30px; height: 30px; border-radius: 50%; border: 2px solid rgba(255,255,255,.25); cursor: pointer; padding: 0; }
+.lb-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; border: 0; background: rgba(255,255,255,.12); color: #fff; cursor: pointer; display: grid; place-items: center; }
+.lb-btn:hover { background: rgba(255,255,255,.22); }
+.lb-btn svg { width: 22px; height: 22px; }
+.lb-prev { left: 0; } .lb-next { right: 0; }
+.lb-close { position: absolute; top: 0; right: 0; transform: none; }
+.lb-link { color: #ffd2a6; font-weight: 500; }
+.lb-count { color: #a8a199; font-variant-numeric: tabular-nums; font-size: 13px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); background: #1b1a19; color: #fff; padding: 8px 14px; border-radius: 10px; font-size: 14px; opacity: 0; pointer-events: none; transition: .25s ease; z-index: 50; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+footer { position: relative; z-index: 1; text-align: center; color: var(--muted); font-size: 13px; padding: 10px 16px 40px; }
+.look-board footer { color: #3d2a1a; }
+
+@media (max-width: 640px) {
+  header.top { padding-top: 20px; }
+  .picker button { padding: 7px 10px; }
+  .picker .lbl { font-size: 14px; }
+  .grid { columns: 2; column-gap: 10px; }
+  .grid .card { margin-bottom: 10px; }
+  .look-cozy .grid .card { padding: 6px; margin-bottom: 16px; }
+  .look-cozy .card figcaption { font-size: 13px; }
+  .lb-btn { width: 40px; height: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; animation: none !important; }
+}
+</style>
+</head>
+<body class="look-board">
+<div class="backdrop cork" aria-hidden="true"></div>
+<div class="backdrop hearth" aria-hidden="true"></div>
+<canvas id="snow" class="backdrop" aria-hidden="true"></canvas>
+
+<header class="top">
+  <div class="title-row">
+    <div>
+      <h1>Spot<span class="dot">.</span></h1>
+      <p class="tagline">A moodboard for a two-year-old black lab with a red collar. Pick a look, pin him around, open any picture for its colours.</p>
+    </div>
+    <div class="picker" role="group" aria-label="Look">
+      <button type="button" data-look="board" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5"/><path d="M9 10.8V5h6v5.8l2 3.2H7z"/></svg><span class="lbl">Pinboard</span></button>
+      <button type="button" data-look="gallery" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span class="lbl">Gallery</span></button>
+      <button type="button" data-look="cozy" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M4.9 6.9l14.2 10.2M19.1 6.9 4.9 17.1"/><path d="m9 4 3 2 3-2M9 20l3-2 3 2"/></svg><span class="lbl">Cozy</span></button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="chips" role="group" aria-label="Filter pictures" id="chips"></div>
+    <div class="actions">
+      <button type="button" class="btn" id="shuffle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Shuffle</button>
+      <button type="button" class="btn board-only" id="zoom-out" aria-label="Zoom out">−</button>
+      <button type="button" class="btn board-only" id="zoom-in" aria-label="Zoom in">+</button>
+      <button type="button" class="btn board-only" id="reset">Tidy up</button>
+    </div>
+  </div>
+
+  <div class="swatches" id="swatches"><span class="label">Spot's colours</span></div>
+</header>
+
+<main id="main" aria-live="polite"></main>
+
+<footer>
+  The pictures of Spot are not covered by the code licence; the author keeps all rights. Most portraits are AI-generated from photos of him.
+  <br><a href="https://github.com/Gitguy268/spot-moodboard">Source on GitHub</a> · <a href="https://gitguy268.github.io/spot-light-hd/">Play Spot-light HD</a>
+</footer>
+
+<dialog class="lightbox" id="lightbox" aria-label="Picture viewer">
+  <div class="lb">
+    <div class="lb-stage" id="lb-stage">
+      <img id="lb-img" alt="">
+      <button type="button" class="lb-btn lb-prev" id="lb-prev" aria-label="Previous picture"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+      <button type="button" class="lb-btn lb-next" id="lb-next" aria-label="Next picture"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+      <button type="button" class="lb-btn lb-close" id="lb-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="lb-info">
+      <div>
+        <p id="lb-alt"></p>
+        <div class="lb-tags" id="lb-tags"></div>
+      </div>
+      <div class="lb-pal" id="lb-pal" aria-label="Colours in this picture"></div>
+      <span class="lb-count" id="lb-count"></span>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="assets/data.js"></script>
+<script>
+(() => {
+  "use strict";
+  const IMAGES = (window.SPOT_IMAGES || []).slice();
+  const byId = Object.fromEntries(IMAGES.map((im) => [im.id, im]));
+  const TAGS = [["all", "All"], ["cozy", "Cozy"], ["festive", "Festive"], ["studio", "Studio"], ["art", "Art"], ["games", "Games"]];
+  const SPOT_COLOURS = [
+    ["Coat", "#141414"], ["Collar", "#c8202f"], ["Eyes", "#8a5527"],
+    ["Nose", "#3a3433"], ["Snow", "#f4f1ea"], ["Tartan", "#2f5a43"], ["Fire", "#e0782a"],
+  ];
+  const GAMES = {
+    "spot-light-hd": ["Spot-light HD", "https://gitguy268.github.io/spot-light-hd/"],
+    "spot-light": ["Spot-light", "https://gitguy268.github.io/spot-light/"],
+    "spot-screensaver": ["Spot screensaver", "https://gitguy268.github.io/spot-screensaver/"],
+    "spot-cli": ["spot-cli", "https://gitguy268.github.io/spot-cli/"],
+  };
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---- storage (may be unavailable: private mode, file:// in some browsers)
+  const KEY = "spot-moodboard:v1";
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
+  const state = Object.assign({ look: "board", filter: "all", order: null, boards: {}, zoom: 1, seed: 1 }, load());
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {} };
+  if (!["board", "gallery", "cozy"].includes(state.look)) state.look = "board";
+  if (!TAGS.some(([t]) => t === state.filter)) state.filter = "all";
+  if (!state.boards || typeof state.boards !== "object") state.boards = {};
+  if (!(state.zoom >= 0.4 && state.zoom <= 1)) state.zoom = 1;
+
+  // ---- seeded random so a layout can be rebuilt the same way
+  const rng = (seed) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+  const shuffled = (arr, rand) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  };
+  if (!Array.isArray(state.order) || state.order.length !== IMAGES.length || state.order.some((id) => !byId[id])) {
+    state.order = shuffled(IMAGES.map((im) => im.id), rng(7));
+  }
+
+  const caption = (im) => im.alt.replace(/^(Spot-light HD|Spot screensaver( vector (style|dream))?|The original Spot-light|spot-cli): /, "").replace(/^(Spot|Puppy Spot) /, "").replace(/^./, (c) => c.toUpperCase());
+  const shortCaption = (im) => {
+    const c = caption(im).split(/,| with | under | in a | between | by a | among /)[0];
+    return c.length > 34 ? c.slice(0, 32).trim() + "…" : c;
+  };
+  const visible = (im) => state.filter === "all" || im.tags.includes(state.filter);
+
+  // ---- toast + copy
+  const toastEl = document.getElementById("toast");
+  let toastTimer;
+  const toast = (msg) => {
+    toastEl.textContent = msg; toastEl.classList.add("show");
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1600);
+  };
+  const copy = async (hex) => {
+    try { await navigator.clipboard.writeText(hex); toast(`Copied ${hex}`); }
+    catch { toast(hex); }
+  };
+
+  // ---- header: swatches, chips, picker
+  const swatches = document.getElementById("swatches");
+  for (const [name, hex] of SPOT_COLOURS) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "sw"; b.title = `Copy ${hex}`;
+    b.innerHTML = `<i style="background:${hex}"></i>${name}`;
+    b.addEventListener("click", () => copy(hex));
+    swatches.append(b);
+  }
+  const chips = document.getElementById("chips");
+  for (const [tag, label] of TAGS) {
+    const n = tag === "all" ? IMAGES.length : IMAGES.filter((im) => im.tags.includes(tag)).length;
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.dataset.tag = tag;
+    b.innerHTML = `${label}<span class="n">${n}</span>`;
+    b.addEventListener("click", () => { state.filter = tag; save(); syncChrome(); applyFilter(); });
+    chips.append(b);
+  }
+  document.querySelectorAll(".picker button").forEach((b) =>
+    b.addEventListener("click", () => setLook(b.dataset.look)));
+
+  function syncChrome() {
+    document.body.className = `look-${state.look}`;
+    document.querySelectorAll(".picker button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.look === state.look)));
+    chips.querySelectorAll(".chip").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tag === state.filter)));
+  }
+
+  // ---- cards
+  const main = document.getElementById("main");
+  const makeCard = (im) => {
+    const fig = document.createElement("figure");
+    fig.className = "card" + (im.cutout ? " cutout" : "");
+    fig.dataset.id = im.id;
+    fig.tabIndex = 0;
+    fig.setAttribute("role", "button");
+    fig.setAttribute("aria-label", `Open: ${im.alt}`);
+    const img = document.createElement("img");
+    img.src = `assets/thumb/${im.id}.webp`;
+    img.alt = im.alt;
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.width = 640; img.height = Math.round(640 * im.h / im.w);
+    img.draggable = false;
+    const cap = document.createElement("figcaption");
+    fig.append(img, cap);
+    return fig;
+  };
+
+  let cards = [];
+  function render() {
+    main.textContent = "";
+    boardEl = boardWrap = null;
+    if (state.look === "board") renderBoard(); else renderGrid();
+    applyFilter();
+  }
+
+  function orderedImages() {
+    const list = state.order.map((id) => byId[id]);
+    if (state.look === "cozy") {
+      // festive and cozy pictures first, games last
+      const rank = (im) => im.tags.includes("festive") ? 0 : im.tags.includes("cozy") ? 1 : im.tags.includes("games") ? 3 : 2;
+      return list.slice().sort((a, b) => rank(a) - rank(b));
+    }
+    return list;
+  }
+
+  function renderGrid() {
+    const grid = document.createElement("div");
+    grid.className = "grid";
+    cards = orderedImages().map((im) => {
+      const c = makeCard(im);
+      c.querySelector("figcaption").textContent = caption(im);
+      grid.append(c);
+      return c;
+    });
+    main.append(grid);
+  }
+
+  // ---- pinboard
+  // Positions are kept per filter in state.boards[filter] = { id: { fx, y, r, z } },
+  // fx as a fraction of the board's logical width so they survive resizes.
+  let boardEl = null, boardWrap = null, boardW = 0;
+  const L = () => boardW / state.zoom; // logical board width (wider when zoomed out)
+  const narrow = () => boardW < 520;
+  const cardWidth = () => (narrow() ? Math.floor((boardW - 30) / 2) : boardW < 900 ? 210 : 236);
+  const positions = () => {
+    if (!state.boards[state.filter]) state.boards[state.filter] = layoutBoard(state.seed || 1);
+    return state.boards[state.filter];
+  };
+  function layoutBoard(seed) {
+    // scatter: each card drops into the shortest column with a little jitter and tilt
+    const rand = rng(seed);
+    const w = L();
+    const cw = cardWidth();
+    const gap = narrow() ? 14 : 34;
+    const cols = Math.max(2, Math.floor((w + gap) / (cw + gap)));
+    const x0 = Math.max(0, (w - (cols * cw + (cols - 1) * gap)) / 2);
+    const heights = new Array(cols).fill(18);
+    const pos = {};
+    let z = 1;
+    for (const im of state.order.map((id) => byId[id])) {
+      if (!visible(im)) continue;
+      let col = 0;
+      for (let i = 1; i < cols; i++) if (heights[i] < heights[col]) col = i;
+      const x = x0 + col * (cw + gap) + (rand() - .5) * (narrow() ? 6 : 22);
+      pos[im.id] = { fx: Math.max(0, x) / w, y: Math.round(heights[col] + (rand() - .5) * 14), r: +((rand() - .5) * 7).toFixed(2), z: z++ };
+      heights[col] += (cw - 20) * (im.h / im.w) + 62 + (narrow() ? 22 : 40);
+    }
+    return pos;
+  }
+  function renderBoard() {
+    boardWrap = document.createElement("div");
+    boardWrap.className = "board-wrap";
+    const hint = document.createElement("p");
+    hint.className = "board-hint";
+    hint.textContent = matchMedia("(hover: hover)").matches
+      ? "Drag pictures around · click one to open it · ctrl + scroll to zoom"
+      : "Press and hold a picture to move it · tap to open";
+    boardEl = document.createElement("div");
+    boardEl.className = "board";
+    boardWrap.append(hint, boardEl);
+    main.append(boardWrap);
+    boardW = boardWrap.clientWidth;
+    cards = state.order.map((id) => {
+      const im = byId[id];
+      const c = makeCard(im);
+      c.style.width = cardWidth() + "px";
+      c.querySelector("figcaption").textContent = im.title || shortCaption(im);
+      attachDrag(c);
+      boardEl.append(c);
+      return c;
+    });
+  }
+  function placeCard(c) {
+    const p = positions()[c.dataset.id];
+    if (!p) return;
+    const x = Math.min(Math.max(0, p.fx * L()), Math.max(0, L() - c.offsetWidth));
+    c.style.transform = `translate(${Math.round(x)}px, ${p.y}px) rotate(${reduceMotion ? 0 : p.r}deg)`;
+    c.style.zIndex = p.z;
+  }
+  function sizeBoard() {
+    if (!boardEl) return;
+    let bottom = 0;
+    const pos = positions();
+    for (const c of cards) {
+      if (c.classList.contains("hidden") || !pos[c.dataset.id]) continue;
+      bottom = Math.max(bottom, pos[c.dataset.id].y + c.offsetHeight);
+    }
+    boardEl.style.width = L() + "px";
+    boardEl.style.height = bottom + 40 + "px";
+    boardEl.style.transform = state.zoom === 1 ? "" : `scale(${state.zoom})`;
+    boardWrap.style.height = Math.ceil((bottom + 40) * state.zoom) + 40 + "px";
+  }
+  function placeAll() {
+    if (!boardEl) return;
+    boardEl.style.width = L() + "px";
+    for (const c of cards) placeCard(c);
+    sizeBoard();
+  }
+
+  let topZ = 1000;
+  let dragging = null;
+  function attachDrag(card) {
+    let start = null, picked = false, holdTimer = 0, moved = false;
+    const pick = (pointerId) => {
+      picked = true; dragging = card;
+      card.classList.add("dragging");
+      const p = positions()[card.dataset.id];
+      p.z = ++topZ; card.style.zIndex = p.z;
+      try { card.setPointerCapture(pointerId); } catch {}
+      if (start && start.type === "touch" && navigator.vibrate) try { navigator.vibrate(8); } catch {}
+    };
+    const drop = () => {
+      clearTimeout(holdTimer);
+      card.classList.remove("dragging");
+      dragging = null; start = null; picked = false;
+    };
+    card.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      const p = positions()[card.dataset.id];
+      if (!p) return;
+      start = { x: e.clientX, y: e.clientY, fx: p.fx, y0: p.y, id: e.pointerId, type: e.pointerType };
+      moved = false; picked = false;
+      if (e.pointerType === "touch") holdTimer = setTimeout(() => pick(e.pointerId), 280);
+      else pick(e.pointerId);
+    });
+    card.addEventListener("pointermove", (e) => {
+      if (!start || e.pointerId !== start.id) return;
+      const dx = (e.clientX - start.x) / state.zoom, dy = (e.clientY - start.y) / state.zoom;
+      if (Math.abs(dx) + Math.abs(dy) > 5) moved = true;
+      if (!picked) { if (moved) drop(); return; } // touch moved before the hold: let the page scroll
+      const p = positions()[card.dataset.id];
+      p.fx = Math.min(Math.max(0, start.fx + dx / L()), Math.max(0, 1 - card.offsetWidth / L()));
+      p.y = Math.max(0, Math.round(start.y0 + dy));
+      placeCard(card);
+    });
+    card.addEventListener("pointerup", (e) => {
+      if (!start || e.pointerId !== start.id) return;
+      const tap = !moved && !(picked && start.type === "touch");
+      const wasDrag = picked && moved;
+      drop();
+      if (wasDrag) { sizeBoard(); save(); }
+      else if (tap) openLightbox(card.dataset.id);
+    });
+    card.addEventListener("pointercancel", drop);
+    card.addEventListener("contextmenu", (e) => { if (picked) e.preventDefault(); });
+  }
+  // a picked-up card on touch must stop the page from scrolling
+  document.addEventListener("touchmove", (e) => { if (dragging) e.preventDefault(); }, { passive: false });
+
+  function setZoom(z) {
+    state.zoom = Math.round(Math.min(1, Math.max(0.4, z)) * 100) / 100;
+    save();
+    placeAll();
+  }
+  document.getElementById("zoom-in").addEventListener("click", () => setZoom(state.zoom + 0.15));
+  document.getElementById("zoom-out").addEventListener("click", () => setZoom(state.zoom - 0.15));
+  addEventListener("wheel", (e) => {
+    if (state.look !== "board" || !e.ctrlKey) return;
+    e.preventDefault();
+    setZoom(state.zoom * (e.deltaY > 0 ? 0.92 : 1.08));
+  }, { passive: false });
+  document.getElementById("reset").addEventListener("click", () => {
+    state.boards[state.filter] = layoutBoard(state.seed || 1);
+    save(); placeAll(); toast("Board tidied");
+  });
+
+  // ---- filter, shuffle, look
+  function applyFilter() {
+    let n = 0;
+    for (const c of cards) {
+      const show = visible(byId[c.dataset.id]);
+      c.classList.toggle("hidden", !show);
+      if (show) n++;
+    }
+    if (state.look === "board") { placeAll(); save(); }
+    let empty = main.querySelector(".empty");
+    if (!n && !empty) { empty = document.createElement("p"); empty.className = "empty"; empty.textContent = "No pictures with this tag."; main.append(empty); }
+    else if (n && empty) empty.remove();
+  }
+  document.getElementById("shuffle").addEventListener("click", () => {
+    state.seed = Math.floor(Math.random() * 1e9);
+    state.order = shuffled(state.order, rng(state.seed));
+    state.boards = {};
+    save(); render();
+  });
+  function setLook(look) {
+    if (look === state.look) return;
+    state.look = look; save(); syncChrome(); render(); snow.toggle(look === "cozy");
+  }
+
+  // ---- lightbox
+  const lb = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lb-img");
+  let lbIndex = 0, lbList = [], lbOpenedAt = 0;
+  function openLightbox(id) {
+    lbList = (state.look === "board" ? state.order.map((x) => byId[x]) : orderedImages()).filter(visible);
+    lbIndex = Math.max(0, lbList.findIndex((im) => im.id === id));
+    showLightbox();
+    lbOpenedAt = performance.now();
+    if (!lb.open) { if (lb.showModal) lb.showModal(); else lb.setAttribute("open", ""); }
+  }
+  function showLightbox() {
+    const im = lbList[lbIndex];
+    if (!im) return;
+    lbImg.src = `assets/img/${im.id}.webp`;
+    lbImg.alt = im.alt;
+    lbImg.className = im.cutout ? "cutout" : "";
+    const alt = document.getElementById("lb-alt");
+    alt.textContent = "";
+    const strong = document.createElement("strong");
+    strong.textContent = (im.title || "") + ". ";
+    alt.append(strong, im.alt + " ");
+    if (im.game && GAMES[im.game]) {
+      const a = document.createElement("a");
+      a.className = "lb-link"; a.href = GAMES[im.game][1]; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = `Open ${GAMES[im.game][0]} ↗`;
+      alt.append(a);
+    }
+    document.getElementById("lb-tags").innerHTML = im.tags.map((t) => `<span>${t}</span>`).join("");
+    const pal = document.getElementById("lb-pal");
+    pal.textContent = "";
+    for (const hex of im.palette) {
+      const b = document.createElement("button");
+      b.type = "button"; b.style.background = hex; b.title = `Copy ${hex}`; b.setAttribute("aria-label", `Copy colour ${hex}`);
+      b.addEventListener("click", () => copy(hex));
+      pal.append(b);
+    }
+    document.getElementById("lb-count").textContent = `${lbIndex + 1} / ${lbList.length}`;
+  }
+  const step = (d) => { lbIndex = (lbIndex + d + lbList.length) % lbList.length; showLightbox(); };
+  const closeLb = () => { if (lb.close) lb.close(); else lb.removeAttribute("open"); };
+  document.getElementById("lb-prev").addEventListener("click", () => step(-1));
+  document.getElementById("lb-next").addEventListener("click", () => step(1));
+  document.getElementById("lb-close").addEventListener("click", closeLb);
+  lb.addEventListener("click", (e) => {
+    // a touch tap opens the viewer on pointerup; its follow-up click must not close it again
+    if (performance.now() - lbOpenedAt < 450) return;
+    if (e.target.id === "lb-stage" || e.target === lb) closeLb(); });
+  lb.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") step(-1);
+    else if (e.key === "ArrowRight") step(1);
+  });
+  let swipe = null;
+  lb.addEventListener("pointerdown", (e) => { swipe = { x: e.clientX, y: e.clientY }; });
+  lb.addEventListener("pointerup", (e) => {
+    if (!swipe) return;
+    const dx = e.clientX - swipe.x, dy = e.clientY - swipe.y;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
+    swipe = null;
+  });
+
+  // keyboard on cards: Enter/Space opens, arrows nudge on the board
+  main.addEventListener("keydown", (e) => {
+    const card = e.target.closest && e.target.closest(".card");
+    if (!card) return;
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLightbox(card.dataset.id); return; }
+    if (state.look !== "board") return;
+    const d = { ArrowLeft: [-12, 0], ArrowRight: [12, 0], ArrowUp: [0, -12], ArrowDown: [0, 12] }[e.key];
+    if (!d) return;
+    e.preventDefault();
+    const p = positions()[card.dataset.id];
+    p.fx = Math.min(Math.max(0, p.fx + d[0] / L()), Math.max(0, 1 - card.offsetWidth / L()));
+    p.y = Math.max(0, p.y + d[1]);
+    placeCard(card); sizeBoard(); save();
+  });
+  main.addEventListener("click", (e) => {
+    // grid looks open on click; the board handles its own pointer events
+    if (state.look === "board") return;
+    const card = e.target.closest(".card");
+    if (card) openLightbox(card.dataset.id);
+  });
+
+  // ---- snow for the cozy look
+  const snow = (() => {
+    const cv = document.getElementById("snow");
+    const ctx = cv.getContext("2d");
+    let flakes = [], raf = 0, w = 0, h = 0, on = false;
+    const size = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      w = innerWidth; h = innerHeight;
+      cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const n = Math.round(Math.min(160, w * h / 9000));
+      flakes = Array.from({ length: n }, () => ({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 2.2 + .6, s: Math.random() * .6 + .3, d: Math.random() * Math.PI * 2 }));
+    };
+    const draw = (move) => {
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "rgba(255,250,240,.85)";
+      for (const f of flakes) {
+        if (move) {
+          f.y += f.s; f.d += .01; f.x += Math.sin(f.d) * .35;
+          if (f.y > h + 4) { f.y = -4; f.x = Math.random() * w; }
+        }
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fill();
+      }
+    };
+    const tick = () => { draw(true); raf = requestAnimationFrame(tick); };
+    addEventListener("resize", () => { if (on) { size(); if (reduceMotion) draw(false); } });
+    return {
+      toggle(v) {
+        on = v; cancelAnimationFrame(raf);
+        if (!v) { ctx.clearRect(0, 0, w, h); return; }
+        size();
+        if (reduceMotion) draw(false); else tick();
+      },
+    };
+  })();
+
+  // ---- resize: positions are fractions of the width; re-pack only when crossing the phone layout
+  let resizeTimer;
+  addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (state.look !== "board" || !boardWrap) return;
+      const w = boardWrap.clientWidth;
+      if (Math.abs(w - boardW) < 2) return;
+      const crossed = narrow() !== (w < 520);
+      boardW = w;
+      for (const c of cards) c.style.width = cardWidth() + "px";
+      if (crossed) state.boards = {};
+      placeAll(); save();
+    }, 120);
+  });
+
+  syncChrome();
+  render();
+  snow.toggle(state.look === "cozy");
+  // card heights change as thumbnails load; refit the board once they're in
+  addEventListener("load", () => { if (state.look === "board") sizeBoard(); });
+  window.__spotMoodboard = { state, count: IMAGES.length };
+})();
+</script>
+</body>
+</html>

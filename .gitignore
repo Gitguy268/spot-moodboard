@@ -1,0 +1,5 @@
+node_modules/
+.DS_Store
+._*
+.vercel/
+scripts/sources.local.json

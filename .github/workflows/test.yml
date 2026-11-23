@@ -1,0 +1,39 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Smoke test, every look x filter, drag, lightbox, phone, file://, Chromium and WebKit
+        run: npm run smoke
+      - name: No metadata in the pictures
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libimage-exiftool-perl > /dev/null
+          bad=$(exiftool -q -q -a -G1 -s -EXIF:all -XMP:all -IPTC:all -JUMBF:all -C2PA:all assets docs -r | head -20)
+          if [ -n "$bad" ]; then echo "$bad"; exit 1; fi
+
+  links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --exclude-loopback --exclude 'fonts\.(googleapis|gstatic)\.com' --exclude 'vercel\.app' --exclude 'gitguy268\.github\.io/spot-moodboard' './**/*.md' index.html
+          fail: true

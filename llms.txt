@@ -1,0 +1,14 @@
+# Spot moodboard
+
+> An interactive moodboard for Spot, a two-year-old black labrador with a red collar. 40 pictures (mostly AI-generated portraits made from photos of him, plus screenshots from his games) in three looks: a cork pinboard where you can drag the pictures around, a clean gallery, and a cozy Christmas wall with falling snow. One static index.html, no build step. MIT licence for the code; the pictures are not MIT.
+
+- Filters: Cozy, Festive, Studio, Art, Games. Shuffle, Tidy up, zoom on the pinboard.
+- Each picture opens in a lightbox with its five main colours; click a colour to copy its hex code.
+- Nothing is uploaded. The look, filter and pinboard positions are kept in localStorage.
+
+## Links
+- [Open the moodboard](https://gitguy268.github.io/spot-moodboard/)
+- [Source](https://github.com/Gitguy268/spot-moodboard)
+- [Spot-light HD, the game](https://github.com/Gitguy268/spot-light-hd)
+- [Spot screensaver](https://github.com/Gitguy268/spot-screensaver)
+- [spot-cli, Spot in the terminal](https://github.com/Gitguy268/spot-cli)

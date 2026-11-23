@@ -1,0 +1,15 @@
+Spot moodboard is MIT licensed, see LICENSE. The MIT licence covers the code only.
+
+Pictures (assets/img, assets/thumb, docs/):
+- All pictures of Spot are Copyright (c) 2026 Lucas Van De Weerd, all rights reserved. They are
+  not covered by the MIT licence and may not be reused without permission.
+- Most portraits are AI-generated from photos of the real dog. The screenshots come from the
+  author's own MIT-licensed projects: spot-light, spot-light-hd, spot-screensaver and spot-cli.
+- Before publishing, every picture was stripped of all metadata (EXIF, XMP, IPTC, C2PA) and
+  engraved collar tags were pixelated.
+
+Fonts, loaded from Google Fonts at runtime (not included in this repository), SIL Open Font
+License 1.1:
+- Caveat by Impallari Type
+- Fraunces by Undercase Type
+- Inter by Rasmus Andersson
